@@ -4,7 +4,9 @@ FROM node:erbium AS build
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get -y -u upgrade
 
-ENV TZ ${TZ:-"America/Los_Angeles"}
+# Force TZ to UTC
+#ENV TZ ${TZ:-"America/Los_Angeles"}
+ENV TZ "UTC"
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Create app directory
@@ -21,7 +23,9 @@ RUN npm prune --production
 # production image
 FROM node:erbium-slim AS production
 ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ ${TZ:-"America/Los_Angeles"}
+# Force TZ to UTC
+#ENV TZ ${TZ:-"America/Los_Angeles"}
+ENV TZ "UTC"
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && apt-get -y -u upgrade && apt-get install -y curl net-tools telnet tcpdump dnsutils
